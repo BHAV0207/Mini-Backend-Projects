@@ -14,6 +14,10 @@ mongoose
 app.use(express.json());
 app.use(cors());
 
+
+const AuthRoutes = require('./Routes/Auth');
+app.use('/api/auth' , AuthRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
