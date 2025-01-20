@@ -18,8 +18,11 @@ app.use(cors());
 const AuthRoutes = require('./Routes/Auth');
 app.use('/api/auth' , AuthRoutes);
 
-const UserRoutes = require('./Routes/To-dos');
-app.use('/api/user' , UserRoutes);
+const TaskRoutes = require('./Routes/To-dos');
+app.use('/api/tasks' , TaskRoutes);
+
+const User = require('./Routes/User');
+app.use('/api/user' , User);
 
 const PORT = process.env.PORT || 5000;
 
