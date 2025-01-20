@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const taskSchema = mongoose.Schema({
   taskTitle : {type : String , required :true},
   taskDescription : {type :String  , max : 100},
-  priority : {type : String , enum:[low , high] ,  default:"low"},
+  priority : {type : String , enum:["low" , "high"] ,  default:"low"},
+  status : {type :String , enum:["completed" , "notCompleted"] , default:"notCompleted"},
   userId : {type : mongoose.Schema.Types.ObjectId , ref:"User" , required:true}
 },
 {timestamps : true})

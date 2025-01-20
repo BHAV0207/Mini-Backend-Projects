@@ -18,6 +18,9 @@ app.use(cors());
 const AuthRoutes = require('./Routes/Auth');
 app.use('/api/auth' , AuthRoutes);
 
+const UserRoutes = require('./Routes/To-dos');
+app.use('/api/user' , UserRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
