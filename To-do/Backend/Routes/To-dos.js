@@ -3,9 +3,31 @@ const router = express.Router();
 const Task = require("../Models/Task");
 const User = require("../Models/User");
 
+//fetching all taska
+router.get("/get/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const existingUser = User.findById(userId);
+    if (!existingUser) {
+      return res.status(404).json({ message: "user does not  exist" });
+    }
+
+    const tasks = await Task.find({ userId: userId });
+
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      tasks,
+    });
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // add a new task
 router.post("/create", async (req, res) => {
-  const { taskTitle, taskDescription, priority, userId } = req.body;
+  const { taskDescription, priority, userId } = req.body;
 
   if (!userId) {
     res.status(500).json({ message: "please enter a user taskId" });
@@ -18,20 +40,14 @@ router.post("/create", async (req, res) => {
       res.status(404).json({ message: "please enter a valid userId" });
     }
 
-    const duplicateTask = await Task.findOne({ taskTitle, userId });
+    const duplicateTask = await Task.findOne({ taskDescription, userId });
     if (duplicateTask) {
-      if (duplicateTask.taskDescription !== taskDescription) {
-        return res.status(400).json({
-          message:
-            "A task with the same title already exists with a different description.",
-        });
-      } else {
+      if (duplicateTask.taskDescription == taskDescription) {
         return res.status(400).json({ message: "Task already exists." });
       }
     }
 
     const newTask = new Task({
-      taskTitle,
       taskDescription,
       priority,
       userId,
@@ -44,10 +60,14 @@ router.post("/create", async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Task created successfully.", task: savedTask });
+      .json({
+        message: "Task created successfully.",
+        task: savedTask,
+        user: user,
+      });
   } catch (err) {
     console.error("Error creating task:", err);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: "error catch in catch block." });
   }
 });
 
@@ -72,11 +92,10 @@ router.delete("/delete/:taskId", async (req, res) => {
   }
 });
 
-
 // updating a task
 router.put("/update/:taskId", async (req, res) => {
   const { taskId } = req.params;
-  const { taskTitle, taskDescription, priority , status} = req.body;
+  const { taskDescription, priority, status } = req.body;
 
   try {
     const task = await Task.findById(taskId);
@@ -85,15 +104,16 @@ router.put("/update/:taskId", async (req, res) => {
     const updatedTask = await Task.findByIdAndUpdate(
       taskId,
       {
-        taskTitle,
         taskDescription,
         priority,
-        status
+        status,
       },
-      { new: true } 
+      { new: true }
     );
 
-    res.status(200).json({ message: "Task updated successfully", task: updatedTask });
+    res
+      .status(200)
+      .json({ message: "Task updated successfully", task: updatedTask });
   } catch (err) {
     console.error("Error updating task:", err);
     res.status(500).json({ message: "Internal server error" });

@@ -7,8 +7,7 @@ import ToDoList from "../Components/ToDoList";
 
 
 function HomePage() {
-  let[user , setUser] = useState(null );
-  console.log(user);
+  let[user , setUser] = useState(null);
   const id = localStorage.getItem('userId');
 
 
@@ -27,7 +26,7 @@ function HomePage() {
     <div className="flex flex-col min-h-screen">
       <Header user={user}/>
       <main className="flex-grow container mx-auto py-8">
-       <ToDoList></ToDoList>
+       <ToDoList user={user}></ToDoList>
       </main>
       <Footer />
     </div>
