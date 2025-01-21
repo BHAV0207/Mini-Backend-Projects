@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function Header({user}) {
-  console.log(user);
+function Header({ user }) {
   const navigate = useNavigate();
 
   const handleLogOut = () => {
@@ -12,23 +11,21 @@ function Header({user}) {
     }, 1000);
   };
 
-  
-
-
   return (
-    <header className="bg-blue-600 text-white py-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <h1 className="text-2xl font-bold"> {user ? `${user.name}'s To-Do List` : "Loading..."}</h1>
+    <header className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-6 shadow-lg sticky top-0 z-10">
+      <div className="container mx-auto flex justify-between items-center px-6">
+        <h1 className="text-3xl font-bold">
+          {user ? `${user.name}'s To-Do List` : "Loading..."}
+        </h1>
         <nav>
-          <ul className="flex space-x-4">
+          <ul className="flex space-x-6">
             <li>
-              <span
+              <button
                 onClick={handleLogOut}
-                href="#"
-                className="hover:text-blue-300 transition duration-300"
+                className="px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition duration-300"
               >
                 Logout
-              </span>
+              </button>
             </li>
           </ul>
         </nav>
