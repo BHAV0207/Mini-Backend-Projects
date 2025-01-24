@@ -5,7 +5,6 @@ function ToDoList({ user }) {
   const [list, setList] = useState([]);
   const [task, setTask] = useState("");
   const [updateTaskId, setUpdateTaskId] = useState(null);
-  const [deleteTaskId, setDeleteTaskId] = useState(null);
 
   const [updateTask, setUpdateTask] = useState({
     taskDescription: "",
@@ -69,16 +68,22 @@ function ToDoList({ user }) {
       );
 
       setUpdateTaskId(null);
-      setUpdateTask({ taskDescription: "", priority: "low", status: "notCompleted" });
+      setUpdateTask({
+        taskDescription: "",
+        priority: "low",
+        status: "notCompleted",
+      });
     } catch (err) {
       console.error("Error updating task:", err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white">
-      <div className="bg-white text-gray-800 shadow-lg rounded-lg w-full max-w-3xl p-6">
-        <h1 className="text-3xl font-bold text-center text-blue-600">To-Do List</h1>
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white ">
+      <div className="bg-white text-gray-800 shadow-lg rounded-lg w-full max-w-3xl p-6 ">
+        <h1 className="text-3xl font-bold text-center text-blue-600">
+          To-Do List
+        </h1>
         <div className="mt-6 flex items-center gap-4">
           <input
             type="text"
@@ -96,82 +101,104 @@ function ToDoList({ user }) {
         </div>
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-3">Your Tasks</h2>
-          {list.length > 0 ? (
-            <ul className="divide-y divide-gray-200">
-              {list.map((task) => (
-                <li
-                  key={task._id}
-                  className="p-4 flex justify-between items-center bg-gray-100 rounded-lg shadow-md mb-3"
-                >
-                  <div>
-                    <p className="font-medium text-lg">{task.taskDescription}</p>
-                    <p className="text-sm text-gray-500">
-                      Priority:{" "}
-                      <span
-                        className={`font-semibold ${
-                          task.priority === "high" ? "text-red-500" : "text-green-500"
-                        }`}
+          <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 rounded-lg">
+            {list.length > 0 ? (
+              <ul className="divide-y divide-gray-200">
+                {list.map((task) => (
+                  <li
+                    key={task._id}
+                    className="p-4 flex justify-between items-center bg-gray-100 rounded-lg shadow-md mb-3"
+                  >
+                    <div>
+                      <p className="font-medium text-lg">
+                        {task.taskDescription}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Priority:{" "}
+                        <span
+                          className={`font-semibold ${
+                            task.priority === "high"
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {task.priority}
+                        </span>
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Status:{" "}
+                        <span
+                          className={`font-semibold ${
+                            task.status === "completed"
+                              ? "text-blue-600"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {task.status}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => handleDelete(task._id)}
+                        className="text-red-500 hover:underline"
                       >
-                        {task.priority}
-                      </span>
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Status:{" "}
-                      <span
-                        className={`font-semibold ${
-                          task.status === "completed" ? "text-blue-600" : "text-gray-600"
-                        }`}
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => {
+                          setUpdateTaskId(task._id);
+                          setUpdateTask(task);
+                        }}
+                        className="text-blue-500 hover:underline"
                       >
-                        {task.status}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => handleDelete(task._id)}
-                      className="text-red-500 hover:underline"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => {
-                        setUpdateTaskId(task._id);
-                        setUpdateTask(task);
-                      }}
-                      className="text-blue-500 hover:underline"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500 text-center">No tasks yet. Add one!</p>
-          )}
+                        Update
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 text-center">
+                No tasks yet. Add one!
+              </p>
+            )}
+          </div>
         </div>
         {updateTaskId && (
           <div className="mt-8 bg-gray-100 p-4 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-3 text-blue-600">Update Task</h3>
+            <h3 className="text-xl font-semibold mb-3 text-blue-600">
+              Update Task
+            </h3>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-600">Task Description</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Task Description
+              </label>
               <input
                 type="text"
                 name="taskDescription"
                 value={updateTask.taskDescription}
                 onChange={(e) =>
-                  setUpdateTask((prev) => ({ ...prev, taskDescription: e.target.value }))
+                  setUpdateTask((prev) => ({
+                    ...prev,
+                    taskDescription: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-600">Priority</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Priority
+              </label>
               <select
                 name="priority"
                 value={updateTask.priority}
                 onChange={(e) =>
-                  setUpdateTask((prev) => ({ ...prev, priority: e.target.value }))
+                  setUpdateTask((prev) => ({
+                    ...prev,
+                    priority: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
@@ -180,7 +207,9 @@ function ToDoList({ user }) {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-600">Status</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Status
+              </label>
               <select
                 name="status"
                 value={updateTask.status}
